@@ -1,0 +1,93 @@
+import java.util.*;
+import java.io.*;
+
+class Node {
+    Node left;
+    Node right;
+    int data;
+    
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+
+class Solution {
+
+	/* 
+    
+    class Node 
+    	int data;
+    	Node left;
+    	Node right;
+	*/
+	public static void levelOrder(Node root) {
+      
+      if(root == null) {
+          System.out.println("");
+      } else {
+          List<Node> allNodes = new LinkedList<>();
+          allNodes.add(root);
+          List<Node> roots = new ArrayList<>();
+          roots.add(root);
+          while(roots != null && roots.size() > 0) {
+
+              List<Node> newroots = new ArrayList<>();
+              for(Node r : roots) {
+                  newroots.addAll(addNextLevelNodes(r, allNodes));
+              }
+              roots = newroots;
+          }
+
+          for(Node n : allNodes) {
+              System.out.print(n.data + " ");
+          }
+      }
+    }
+
+    private static List<Node> addNextLevelNodes(Node currentNode, List<Node> allNodes) {
+        
+        List<Node> roots = new ArrayList<>();
+        Node rootLeft = currentNode.left;
+        Node rootRight = currentNode.right;
+
+        if(rootLeft != null) {
+            roots.add(rootLeft);
+            allNodes.add(rootLeft);
+        }
+        if(rootRight != null) {
+            roots.add(rootRight);
+            allNodes.add(rootRight);
+        }
+        return roots;
+    }
+
+	public static Node insert(Node root, int data) {
+        if(root == null) {
+            return new Node(data);
+        } else {
+            Node cur;
+            if(data <= root.data) {
+                cur = insert(root.left, data);
+                root.left = cur;
+            } else {
+                cur = insert(root.right, data);
+                root.right = cur;
+            }
+            return root;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int t = scan.nextInt();
+        Node root = null;
+        while(t-- > 0) {
+            int data = scan.nextInt();
+            root = insert(root, data);
+        }
+        scan.close();
+        levelOrder(root);
+    }	
+}
